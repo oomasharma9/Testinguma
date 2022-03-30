@@ -1,0 +1,77 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CustomScript
+
+# Controls when the workflow will run
+on:
+  workflow_dispatch:
+    inputs:
+      LocationID:
+        description: "Resource Group Location (weu / frc)"
+        required: true
+        default: "weu"
+        tfstate-location:
+        description: "Location of the tfstate file eg : key=abc.tfstate"
+        required: true
+      working-directory:
+        description: "Location of the new code to be checked eg: Templates/2.Hub/hub-firewall/"
+        required: true
+        
+      variable-file:
+        description: "name of the variable file .tfvars need to be added here optional para meter eg : --var-file=weu.tfvars"
+        required: false
+        default: ""
+
+  jobs:
+  run-tfplan:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+      # Working directory needs to be changed for every check to the specific directory.
+        working-directory: ${{ github.event.inputs.working-directory }}
+    env:
+      TF_CLI_ARGS_init: -backend-config=${{ github.event.inputs.tfstate-location }}
+      TF_CLI_ARGS_plan: ${{ github.event.inputs.variable-file }}
+      TF_VAR_location_code: ${{ github.event.inputs.LocationID }}
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup env Vars
+        run: |
+          #!/bin/bash
+          # echo "location_code=${{ github.event.inputs.LocationID }}" >> $GITHUB_ENV
+           echo $TF_CLI_ARGS_init
+          case ${{ github.event.inputs.LocationID }} in
+            weu) 
+              echo "TF_VAR_location=westeurope" >> $GITHUB_ENV
+              ;;
+          esac
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -no-color
+        continue-on-error: true
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
