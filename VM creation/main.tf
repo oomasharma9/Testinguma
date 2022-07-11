@@ -90,10 +90,6 @@ resource "azurerm_linux_virtual_machine" "vm" {
     product   = "nexpose-scan-engine"
   }
 
-  boot_diagnostics {
-    enabled = "true"
-  }
-
   output "output" {
     value = data.azurerm_linux_virtual_machine.admin_username
   }
