@@ -17,7 +17,6 @@ resource "azurerm_network_interface" "nic" {
   name                = var.nic_name
   location            = var.location
   resource_group_name = var.rg_name
-  #Need to confirm this part
   delete = "true"
 
   ip_configuration {
@@ -42,11 +41,8 @@ resource "azurerm_network_security_group" "nsg" {
 
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefix      = "10.206.0.0/16"
+    source_address_prefix      = "10.0.0.0/24"
     destination_address_prefix = "*"
-#Need to check the id values to specify
-    source_application_security_group_ids = []
-    destination_application_security_group_ids = []
   }
 }
 
@@ -56,19 +52,18 @@ resource "azurerm_subnet_network_security_group_association" "nsg association" {
   network_security_group_id = data.azurerm_network_security_group.nsg.id
 }
 
-#To confirm
 resource "tls_private_key" "privatekey" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
-  name                = "vm-r7scanengine-prd-frc-001"
+  name                = "testvm"
   location            = var.location
   resource_group_name = var.rg_name
   size                = var.vm_size
-  admin_username      = "r7admin"
-  admin_password      = "R@pid7Afkl"
+  admin_username      = "testuser"
+  admin_password      = "Test@ccount01"
   disable_password_authentication = true
   delete_os_disk_on_termination = "true"
   network_interface_ids = [azurerm_network_interface.nic.id]
@@ -96,7 +91,6 @@ resource "azurerm_linux_virtual_machine" "vm" {
   }
 
   boot_diagnostics {
-  #Need to confirm this part
     enabled = "true"
   }
 

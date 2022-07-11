@@ -1,31 +1,31 @@
 variable "vnet_name" {
   description = "Name of the VNET"
   type        = string
-  default     = "vnet-secops-prod-frc"
+  default     = "vnet1"
 }
 
 variable "rg_name" {
   description = "Name of the VNET Shared Resource Group"
   type        = string
-  default     = "rg-secops-spoke-prod-frc-001"
+  default     = "rg"
 }
 
 variable "subnet_name" {
   description = "Name of the Subnet"
   type        = string
-  default     = "DataSubnet"
+  default     = "subnet1"
 }
 
 variable "nic_name" {
   description = "Name of the Subnet"
   type        = string
-  default     = "vm-r7scanengine-prd-frc-001-nic1"
+  default     = "nic1"
 }
 
 variable "nsg_name" {
   description = "Name of the Subnet"
   type        = string
-  default     = "nsg-r7scanengine-prd-frc-001"
+  default     = "nsg1"
 }
 
 variable "location" {
@@ -44,9 +44,9 @@ variable "tags" {
   description = "Tags to apply to all resources created."
   type        = map(string)
   default = {
-    env   = "Prod"
+    env   = "Test"
     state = "donotdelete"
-    owner = "SecOps"
+    owner = "Uma"
   }
 }
 
