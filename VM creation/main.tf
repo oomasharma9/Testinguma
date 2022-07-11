@@ -46,7 +46,7 @@ resource "azurerm_network_security_group" "nsg" {
   }
 }
 
-resource "azurerm_subnet_network_security_group_association" "nsg association" {
+resource "azurerm_subnet_network_security_group_association" "nsgaccociation" {
   subnet_id                 = data.azurerm_subnet.subnet.id
   network_interface_ids     = data.azurerm_network_interface.nic.id
   network_security_group_id = data.azurerm_network_security_group.nsg.id
