@@ -41,7 +41,7 @@ resource "azurerm_network_security_group" "nsg" {
 
     source_port_range          = "*"
     destination_port_range     = "22"
-    source_address_prefix      = "10.0.0.0/24"
+    source_address_prefix      = "10.0.0.0/16"
     destination_address_prefix = "*"
   }
 }
@@ -74,7 +74,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
     computer_name        = data.azurerm_linux_virtual_machine.name
     caching              = "ReadWrite"
     storage_account_type = "StandardSSD_LRS"
-    admin_username       = "r7admin"
+    admin_username       = "testuser"
   }
 
   source_image_reference {

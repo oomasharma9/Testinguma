@@ -1,19 +1,19 @@
 variable "vnet_name" {
   description = "Name of the VNET"
   type        = string
-  default     = "vnet1"
+  default     = "vnettest"
 }
 
 variable "rg_name" {
   description = "Name of the VNET Shared Resource Group"
   type        = string
-  default     = "rg"
+  default     = "rgtest"
 }
 
 variable "subnet_name" {
   description = "Name of the Subnet"
   type        = string
-  default     = "subnet1"
+  default     = "subnettest"
 }
 
 variable "nic_name" {
